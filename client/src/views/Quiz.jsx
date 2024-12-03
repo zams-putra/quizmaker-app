@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 
 export default function Quiz() {
   const [quiz, setQuiz] = useState({
@@ -7,12 +8,16 @@ export default function Quiz() {
     b: "",
     c: "",
     d: "",
+    correct: "",
   });
+
   const [quizes, setQuizes] = useState([]);
 
   const [link, setLink] = useState(false);
   const [clipboard, setClipboard] = useState(false);
   const [code, setCode] = useState("");
+
+  const [newData, setNewData] = useState(false);
 
   const questionHandle = (e) => {
     setQuiz({
@@ -44,6 +49,12 @@ export default function Quiz() {
       d: e.target.value,
     });
   };
+  const correctHandle = (e) => {
+    setQuiz({
+      ...quiz,
+      correct: e.target.value,
+    });
+  };
 
   const addQuestionHandle = (e) => {
     e.preventDefault();
@@ -59,22 +70,57 @@ export default function Quiz() {
       b: "",
       c: "",
       d: "",
+      correct: "",
     });
   };
 
-  const submitHandler = () => {
+  const submitHandler = async () => {
     setLink(true);
-    const random = Math.round(Math.random() * 10 + 1);
+    const random = Math.round(Math.random() * 100 + 1).toString();
     setCode(random);
+
+    try {
+      console.log(quizes);
+      const result = await axios.post(
+        "https://quizmaker-app-api.vercel.app/api/create-quiz",
+        {
+          id_quiz: random, // harus random soalnya belum keluar dari sini jadi gabisa masuk ke state code
+          quizes,
+        }
+      );
+
+      if (result.status === 201) {
+        setNewData(true);
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setQuiz({
+        question: "",
+        a: "",
+        b: "",
+        c: "",
+        d: "",
+        correct: "",
+      });
+      setQuizes([]);
+    }
   };
 
   const copyClipboard = () => {
-    navigator.clipboard.writeText(`http://localhost:5173/answer/${code}`);
+    navigator.clipboard.writeText(
+      `https://quizmaker-app-api.vercel.app/api/answer/${code}`
+    );
     setClipboard(!clipboard);
   };
 
   return (
     <>
+      {newData && (
+        <p className="text-3xl animate-copied text-green-400 font-semibold p-4 text-center fixed top-1/2 z-40 left-auto">
+          New data added
+        </p>
+      )}
       <h1 className="text-4xl p-8 font-bold bg-gradient-to-r from-indigo-500 to-slate-700 bg-clip-text text-transparent">
         Quiz Page
       </h1>
@@ -148,8 +194,13 @@ export default function Quiz() {
 
           <section className="flex gap-8">
             <p>Select your correct answer</p>
-            <select className="w-20 ml-4 text-center rounded-md bg-slate-900 border-2 border-indigo-500 hover:border-indigo-400 hover:bg-indigo-900">
-              <option></option>
+            <select
+              value={quiz.correct} // harusnya gini jir
+              required
+              onChange={correctHandle}
+              className="w-20 ml-4 text-center rounded-md bg-slate-900 border-2 border-indigo-500 hover:border-indigo-400 hover:bg-indigo-900"
+            >
+              <option value="">Select</option>
               <option value="a">A</option>
               <option value="b">B</option>
               <option value="c">C</option>
@@ -227,7 +278,7 @@ export default function Quiz() {
               className="p-1 rounded-md text-center border-2 border-indigo-500"
               type="text"
               disabled
-              value={`https://sebussmith.com/answer/${code}`}
+              value={`${window.location.origin}/answer/${code}`}
             />
             <button
               onClick={copyClipboard}
