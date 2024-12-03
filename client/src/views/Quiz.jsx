@@ -86,6 +86,11 @@ export default function Quiz() {
         {
           id_quiz: random, // harus random soalnya belum keluar dari sini jadi gabisa masuk ke state code
           quizes,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
       );
 
@@ -108,9 +113,7 @@ export default function Quiz() {
   };
 
   const copyClipboard = () => {
-    navigator.clipboard.writeText(
-      `https://quizmaker-app-api.vercel.app/api/answer/${code}`
-    );
+    navigator.clipboard.writeText(`${window.location.origin}/answer/${code}`);
     setClipboard(!clipboard);
   };
 
