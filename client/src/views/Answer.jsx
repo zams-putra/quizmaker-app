@@ -1,17 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import Loading from "../components/Loading";
 
-export default function Answer() {
+// eslint-disable-next-line react/prop-types
+export default function Answer({ setIsLoading, isLoading }) {
   const { id } = useParams();
-  const [loading, setLoading] = useState(true);
+
   const [quiz, setData] = useState([]);
   const [long, setLong] = useState(0);
 
-  useState(() => {
+  useEffect(() => {
     try {
       const getQuiz = async () => {
+        setIsLoading(true);
         const result = await axios.get(
           `https://quizmaker-app-api.vercel.app/api/answer/${id}`
         );
@@ -22,9 +25,9 @@ export default function Answer() {
     } catch (err) {
       console.log(err);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
-  }, []);
+  }, [id, setIsLoading]);
 
   const [done, setDone] = useState(0);
   const [answered, setAnswered] = useState([]);
@@ -71,15 +74,9 @@ export default function Answer() {
     }
   };
 
-  if (loading) {
-    return (
-      <>
-        <p>Loading....</p>
-      </>
-    );
+  if (isLoading) {
+    return <Loading />;
   }
-
-  console.log(quiz);
 
   return (
     <>
