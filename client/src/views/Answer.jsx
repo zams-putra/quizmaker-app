@@ -20,12 +20,11 @@ export default function Answer({ setIsLoading, isLoading }) {
         );
         setData(result.data.quiz.quizes || []); // langsung ambil aja dah data arr nya
         setLong(result.data.quiz.quizes.length);
+        setIsLoading(false);
       };
       getQuiz();
     } catch (err) {
       console.log(err);
-    } finally {
-      setIsLoading(false);
     }
   }, [id, setIsLoading]);
 
