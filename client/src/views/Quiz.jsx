@@ -1,7 +1,9 @@
 import { useState } from "react";
 import axios from "axios";
+import Loading from "../components/Loading";
 
-export default function Quiz() {
+// eslint-disable-next-line react/prop-types
+export default function Quiz({ setIsLoading, isLoading }) {
   const [quiz, setQuiz] = useState({
     question: "",
     a: "",
@@ -80,7 +82,7 @@ export default function Quiz() {
     setCode(random);
 
     try {
-      console.log(quizes);
+      setIsLoading(true);
       const result = await axios.post(
         "https://quizmaker-app-api.vercel.app/api/create-quiz",
         {
@@ -109,6 +111,7 @@ export default function Quiz() {
         correct: "",
       });
       setQuizes([]);
+      setIsLoading(false);
     }
   };
 
@@ -117,13 +120,18 @@ export default function Quiz() {
     setClipboard(!clipboard);
   };
 
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
     <>
       {newData && (
-        <p className="text-3xl animate-copied text-green-400 font-semibold p-4 text-center fixed top-1/2 z-40 left-auto">
-          New data added
+        <p className="text-xs animate-muncul bg-slate-900 border-b-2 border-indigo-500 rounded-md text-green-500 font-semibold p-1 md:text-sm md:p-4 text-center fixed top-1/2 z-40 left-10">
+          Quiz added
         </p>
       )}
+
       <h1 className="text-4xl p-8 font-bold bg-gradient-to-r from-indigo-500 to-slate-700 bg-clip-text text-transparent">
         Quiz Page
       </h1>
