@@ -9,7 +9,6 @@ export default function Answer({ setIsLoading, isLoading }) {
   const { id } = useParams();
 
   const [quiz, setData] = useState([]);
-  const [long, setLong] = useState(0);
 
   useEffect(() => {
     try {
@@ -18,8 +17,7 @@ export default function Answer({ setIsLoading, isLoading }) {
         const result = await axios.get(
           `https://quizmaker-app-api.vercel.app/api/answer/${id}`
         );
-        setData(result.data.quiz.quizes || []); // langsung ambil aja dah data arr nya
-        setLong(result.data.quiz.quizes.length);
+        setData(result.data.quiz?.quizes || []); // langsung ambil aja dah data arr nya
         setIsLoading(false);
       };
       getQuiz();
@@ -68,7 +66,7 @@ export default function Answer({ setIsLoading, isLoading }) {
       score: skor,
       correct,
     });
-    if (answerVal.length === long) {
+    if (answerVal.length === quiz.length) {
       setJustShow(true);
     }
   };
@@ -77,16 +75,23 @@ export default function Answer({ setIsLoading, isLoading }) {
     return <Loading />;
   }
 
+  if (quiz.length < 1) {
+    return <p>Data empty 😔</p>;
+  }
+
   return (
     <>
       <h1 className="text-4xl p-8 font-bold bg-gradient-to-r from-indigo-500 to-slate-700 bg-clip-text text-transparent">
         Answer Page
       </h1>
-      <section className="flex flex-col gap-8 m-8 p-8 w-1/2 mx-auto border-2 border-blue-400">
+      <section className="w-full flex flex-col gap-8 m-8 p-8 mx-auto">
         {quiz.map((data, index) => {
           return (
-            <div key={index} className="p-4 border-b-2 border-b-indigo-500">
-              <p>
+            <div
+              key={index}
+              className="w-full p-8 gap-8 md:w-1/3 md:mx-auto border-2 rounded-md border-blue-400"
+            >
+              <p className="mb-8">
                 <span>
                   {index + 1}. {data.question}
                 </span>
@@ -138,7 +143,7 @@ export default function Answer({ setIsLoading, isLoading }) {
         })}
       </section>
 
-      {done == long ? (
+      {done == quiz.length ? (
         <span className="text-xs animate-muncul">💡Submit for assesment</span>
       ) : (
         ""
@@ -152,10 +157,10 @@ export default function Answer({ setIsLoading, isLoading }) {
 
       <div className="fixed top-1/2 right-0 border-2 border-indigo-500 w-16 md:w-32 h-10 flex justify-center items-center">
         <div
-          style={{ width: `${(done / long) * 100}%` }}
+          style={{ width: `${(done / quiz.length) * 100}%` }}
           className="h-full bg-indigo-500 absolute right-0 z-0"
         ></div>
-        <p className="z-10">{(done / long) * 100}%</p>{" "}
+        <p className="z-10">{((done / quiz.length) * 100).toFixed()}%</p>
       </div>
 
       <section className="flex flex-col gap-4 items-center w-full p-4">
@@ -189,15 +194,15 @@ export default function Answer({ setIsLoading, isLoading }) {
 
       {justShow && (
         <section className="m-4 p-4 flex flex-col justify-center items-center gap-4">
-          <p className="text-4xl p-8 font-bold bg-gradient-to-r from-indigo-500 to-slate-700 bg-clip-text text-transparent">
-            Your score is{" "}
+          <p className="text-2xl p-8 font-bold bg-gradient-to-r from-indigo-500 to-slate-700 bg-clip-text text-transparent md:text-4xl">
+            Your score is
             <span
               className={`${
                 showResult.score > 50 ? "text-green-400" : "text-red-500"
               } border-b-2 border-b-indigo-500 p-2`}
             >
               {showResult.score}
-            </span>{" "}
+            </span>
             ({showResult.correct}/{answerVal.length})
           </p>
           <div className="w-full flex gap-4 p-4 items-center justify-center border-l-2 border-l-indigo-500">
