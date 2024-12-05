@@ -1,5 +1,6 @@
 import aos from "aos";
 import { useEffect } from "react";
+import { motion } from "motion/react";
 
 export default function Home() {
   useEffect(() => {
@@ -11,13 +12,30 @@ export default function Home() {
 
   return (
     <>
+      <motion.div
+        className="fixed w-10 h-10 rounded-full bg-slate-50 top-1/2 right-3 cursor-pointer"
+        whileHover={{ scale: 1.5 }}
+        whileTap={{ scale: 0.4 }}
+      ></motion.div>
+
       <header className="w-full p-8 text-center min-h-screen my-8 flex justify-center items-center flex-col gap-4">
-        <h1 className="text-4xl p-8 font-bold bg-gradient-to-r from-indigo-500 to-slate-700 bg-clip-text text-transparent">
+        <motion.h1
+          className="text-4xl p-8 font-bold bg-gradient-to-r from-indigo-500 to-slate-700 bg-clip-text text-transparent"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1.2 }}
+          transition={{ duration: 1 }}
+        >
           Home Page
-        </h1>
-        <p className="bg-gradient-to-r from-indigo-500 to-slate-200 bg-clip-text text-transparent">
+        </motion.h1>
+
+        <motion.p
+          className="bg-gradient-to-r from-indigo-500 to-slate-200 bg-clip-text text-transparent  cursor-pointer"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.9 }}
+        >
           Welcome to main page, please explore this website for more
-        </p>
+        </motion.p>
       </header>
 
       <section className="p-4 my-8 mb-32 min-h-screen flex flex-col gap-8 items-center">
