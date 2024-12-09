@@ -117,7 +117,7 @@ export default function About() {
         <h1 className="text-4xl p-8 font-bold bg-gradient-to-r from-indigo-500 to-slate-300 bg-clip-text text-transparent">
           Contact me
         </h1>
-        <a href="https://github.com/tomba-hopkins">
+        <a href="https://github.com/zams-putra">
           <FontAwesomeIcon
             icon={faGithub}
             className="text-9xl text-gray-700 hover:text-gray-50 transition-colors duration-200"
