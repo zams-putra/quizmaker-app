@@ -17,6 +17,7 @@ export default function Answer({ setIsLoading, isLoading }) {
         const result = await axios.get(
           `https://quizmaker-app-api.vercel.app/api/answer/${id}`
         );
+        // const {quiz} = await result.json()
         setData(result.data.quiz?.quizes || []); // langsung ambil aja dah data arr nya
         setIsLoading(false);
       };
