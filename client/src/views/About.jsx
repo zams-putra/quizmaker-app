@@ -105,11 +105,6 @@ export default function About() {
                 src="/assets/dotenv.svg"
                 alt="dotenv"
               />
-              <img
-                className="w-full md:w-1/4 h-1/4 md:grayscale hover:grayscale-0 duration-150"
-                src="/assets/docker.svg"
-                alt="docker"
-              />
             </div>
           </div>
         </div>
